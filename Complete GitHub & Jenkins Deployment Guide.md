@@ -1,4 +1,3 @@
-````markdown
 # 🧭 Complete GitHub & Jenkins Deployment Guide
 
 ## 🧩 Part 1 — Create and Configure Your GitHub Repository
@@ -11,7 +10,7 @@
 
 ### **2. Create a New Repository**
 1. Navigate to your **profile or organization**.  
-2. Click **Repositories → New** (or use the **“+” → New repository** option).  
+2. Click **Repositories → New** (or use the **"+" → New repository** option).  
 3. Fill out:  
    - **Repository Name**  
    - **Description** *(optional)*  
@@ -39,7 +38,7 @@
 2. Select the **SSH** tab.  
 3. Copy the SSH URL (e.g. `git@github.com:username/repo-name.git`).  
 
-> Save this URL — you’ll use it for Jenkins pipelines and manual cloning.
+> Save this URL — you'll use it for Jenkins pipelines and manual cloning.
 
 ---
 
@@ -63,20 +62,19 @@
 1. Navigate to your document root:  
    ```bash
    cd /home/username/
-````
+   ```
 
 2. Backup the existing folder (if any):
-
    ```bash
    mv public_html public_html_bk
    ```
-3. Clone the repository into the new folder:
 
+3. Clone the repository into the new folder:
    ```bash
    git clone git@github.com:username/repo-name.git public_html
    ```
-4. Correct ownership and permissions:
 
+4. Correct ownership and permissions:
    ```bash
    chown -R username:group public_html
    ```
@@ -88,7 +86,6 @@
 ### **1. Access Jenkins**
 
 Open Jenkins in your browser:
-
 ```
 http://your-server-ip:8080
 ```
@@ -107,20 +104,16 @@ http://your-server-ip:8080
 ### **3. Configure Jenkins**
 
 #### **General**
-
-* Leave default options.
+- Leave default options.
 
 #### **Source Code Management**
-
 1. Select **Git**.
 2. In **Repository URL**, paste:
-
    ```
    git@github.com:username/repo-name.git
    ```
 3. Under **Credentials**, choose or add your SSH credentials.
 4. Specify the branch:
-
    ```
    main
    ```
@@ -130,7 +123,6 @@ http://your-server-ip:8080
 #### **Build Triggers**
 
 Enable **Poll SCM** and use:
-
 ```
 H/5 * * * *
 ```
@@ -165,8 +157,8 @@ find . -type d -exec chmod 755 {} \;
 
 ### **4. Run the Build**
 
-* Click **Save**.
-* On the project dashboard, click **Build Now** to trigger deployment.
+- Click **Save**.
+- On the project dashboard, click **Build Now** to trigger deployment.
 
 ---
 
@@ -182,5 +174,98 @@ find . -type d -exec chmod 755 {} \;
 | 6    | Poll SCM      | Automate updates every 5 minutes             |
 | 7    | Deploy        | Pull latest Laravel code and set permissions |
 
+---
+
+## 🔧 Additional Configuration Options
+
+### **Webhook Setup (Alternative to Polling)**
+1. In your GitHub repository, go to **Settings → Webhooks**
+2. Add webhook URL: `http://your-jenkins-server:8080/github-webhook/`
+3. Select content type: `application/json`
+4. Choose events: **Just the push event**
+
+### **Environment-Specific Deployment Scripts**
+
+#### **For WordPress Sites:**
+```bash
+cd /home/username/public_html/
+
+git stash
+git pull origin main
+
+# WordPress specific permissions
+find . -type f -exec chmod 644 {} \;
+find . -type d -exec chmod 755 {} \;
+chmod 600 wp-config.php
 ```
+
+#### **For Node.js Applications:**
+```bash
+cd /home/username/public_html/
+
+git stash
+git pull origin main
+npm install
+npm run build
+
+# Set permissions
+chown -R username:group *
+find . -type f -exec chmod 644 {} \;
+find . -type d -exec chmod 755 {} \;
 ```
+
+### **Database Migrations (Laravel)**
+Add to your Laravel deployment script:
+```bash
+# Run database migrations
+php artisan migrate --force
+
+# Cache optimization
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+---
+
+## 🛠️ Troubleshooting Common Issues
+
+### **SSH Key Configuration**
+Ensure Jenkins has proper SSH access:
+```bash
+# Test SSH connection from Jenkins server
+ssh -T git@github.com
+```
+
+### **Permission Issues**
+Fix common permission problems:
+```bash
+# Reset web directory ownership
+chown -R username:username /home/username/public_html
+chmod 755 /home/username
+chmod 755 /home/username/public_html
+```
+
+### **Jenkins Plugin Requirements**
+Ensure these plugins are installed:
+- Git Plugin
+- SSH Plugin
+- GitHub Plugin (for webhooks)
+
+---
+
+## 📊 Monitoring and Logs
+
+### **Check Jenkins Build Logs**
+- Go to Jenkins job → **Build History** → **Console Output**
+
+### **Monitor Deployment Status**
+```bash
+# Check recent file changes
+ls -lat /home/username/public_html/
+
+# Verify permissions
+namei -l /home/username/public_html/
+```
+
+This comprehensive guide ensures smooth automated deployments from GitHub to your production server using Jenkins! 🚀
