@@ -173,7 +173,3 @@ find . -type d -exec chmod 755 {} \;
 | 5    | SCM Config    | Connect GitHub repo via SSH                  |
 | 6    | Poll SCM      | Automate updates every 5 minutes             |
 | 7    | Deploy        | Pull latest Laravel code and set permissions |
-
----
-
-
