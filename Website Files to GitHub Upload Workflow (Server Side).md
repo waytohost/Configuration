@@ -1,4 +1,4 @@
-````md
+
 # 📘 Website → GitHub Upload Workflow (Server Side)
 
 ### 🔹 1. Take Full Backup (MANDATORY)
