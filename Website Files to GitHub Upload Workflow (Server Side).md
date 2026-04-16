@@ -1,7 +1,7 @@
 ````md
 # 📘 Website → GitHub Upload Workflow (Server Side)
 
-## 🔹 1. Take Full Backup (MANDATORY)
+### 🔹 1. Take Full Backup (MANDATORY)
 
 ### Website files:
 ```bash
