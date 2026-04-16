@@ -110,8 +110,8 @@ git add .
 ## 🔹 8. Set Git Identity
 
 ```bash
-git config --global user.name "Vikas Gupta"
-git config --global user.email "vikas@ephpsolutions.com"
+git config --global user.name "waytohost"
+git config --global user.email "waytohost@gmail.com"
 ```
 
 ---
